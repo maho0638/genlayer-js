@@ -1,0 +1,23 @@
+name: Verify PR 226 latest source
+on:
+  push:
+    branches: [diag/validate-pr226-20261012]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+jobs:
+  exact-source-build-tests:
+    runs-on: ubuntu-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - run: npx vitest run --typecheck
